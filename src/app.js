@@ -20,6 +20,7 @@ app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'));
 
 app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
+app.get('/api/v1/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/provider', providerRoutes);

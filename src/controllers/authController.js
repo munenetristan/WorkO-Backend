@@ -9,9 +9,12 @@ const { createAccessToken, createOtpToken, verifyOtpToken } = require('../utils/
 const requestOtpHandler = async (req, res, next) => {
   try {
     const { phone, countryCode, dialingCode } = req.body;
-    const country = await Country.findOne({ iso2: countryCode.toUpperCase(), enabled: true });
-    if (!country || country.dialingCode !== dialingCode) {
-      return res.status(400).json({ message: 'Unsupported country selection' });
+    const countryCount = await Country.countDocuments();
+    if (countryCount > 0) {
+      const country = await Country.findOne({ iso2: countryCode.toUpperCase(), enabled: true });
+      if (!country || country.dialingCode !== dialingCode) {
+        return res.status(400).json({ message: 'Unsupported country selection' });
+      }
     }
     const { code, expiresAt } = await requestOtp(phone);
     return res.status(200).json({ message: 'OTP sent', expiresAt, otpPreview: code });
@@ -44,9 +47,12 @@ const registerHandler = async (req, res, next) => {
     const payload = verifyOtpToken(req.body.otpToken);
     const phone = payload.phone;
 
-    const country = await Country.findOne({ iso2: req.body.country.toUpperCase(), enabled: true });
-    if (!country) {
-      return res.status(400).json({ message: 'Invalid country' });
+    const countryCount = await Country.countDocuments();
+    if (countryCount > 0) {
+      const country = await Country.findOne({ iso2: req.body.country.toUpperCase(), enabled: true });
+      if (!country) {
+        return res.status(400).json({ message: 'Invalid country' });
+      }
     }
 
     const existing = await User.findOne({ phone });

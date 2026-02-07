@@ -42,6 +42,10 @@ See `.env.example` for the full list.
 - `POST /api/v1/auth/otp/request`
 - `POST /api/v1/auth/otp/verify`
 - `POST /api/v1/auth/register`
+- `POST /api/v1/auth/login`
+
+### Health
+- `GET /api/v1/health`
 
 ### Provider
 - `PATCH /api/v1/provider/online`
